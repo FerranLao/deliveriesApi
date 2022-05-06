@@ -14,9 +14,10 @@ const find = async (req) => {
     : 0;
   const sort = { _id: 1 };
 
-  // if date provided, filter by date
+  // if date provided, filter by date 
+  //? redundant with dateFrom
   if (req.body.when) {
-    query['when'] = {
+    query.when = {
       $gte: req.body.when,
     };
   }
@@ -31,9 +32,9 @@ const find = async (req) => {
 
   if (req.body.weight) {
     const prodIds = await Products.find({ weight: req.body.weight }, '_id');
-
     query.products = { $in: prodIds.map((e) => e._id) };
   }
+  
   const totalResults = await Deliveries.find(query).countDocuments();
   const deliveries = await Deliveries.find(query)
     .populate('products')
